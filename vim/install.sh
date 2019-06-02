@@ -25,9 +25,9 @@ echo "Install plug for vim"
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Install fonts for airline bar
-echo "Downloading fonts"
-brew tap homebrew/cask-fonts
-brew cask install font-droidsansmono-nerd-font
+# echo "Downloading fonts"
+# brew tap homebrew/cask-fonts
+# brew cask install font-droidsansmono-nerd-font
 
 
 echo "Recommended add an alias to from vim to nvim"
