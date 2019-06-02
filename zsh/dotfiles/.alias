@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+alias ...='cd ../../'
+alias ....='cd ../../../' alias .....='cd ../../../../'
+alias ......='cd ../../../../../'
+alias ntnu='cd ~/NTNU'
+alias c=pbcopy
+
+alias phps='php -S localhost:3000'
+
+alias vim=nvim
+
+alias cl='clear'
+alias network='ping 8.8.8.8'
+
+alias xcode='open -a /Applications/Xcode.app'

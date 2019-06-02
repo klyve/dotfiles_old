@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# z
+. /usr/local/etc/profile.d/z.sh

@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+function reload {
+    source ~/.zshrc
+}
+
+function pg-start {
+    pg_ctl -D /usr/local/var/postgres start
+}
+
+function pg-restart {
+    pg_ctl -D /usr/local/var/postgres restart
+}
+
+function mongo-start {
+    mongod --config /usr/local/etc/mongod.conf
+}
+
+function redis-start {
+    redis-server /usr/local/etc/redis.conf
+}
+
+
+function dev {
+    if [ -z $1 ]; then
+        if [ -z $DEFAULT_DEV_ENV ]; then
+            echo "usage: dev <environment>"
+            echo "Or export \$DEFAULT_DEV_ENV"
+            return
+        fi
+    fi
+    ENVIRONMENT=${1:-$DEFAULT_DEV_ENV}
+
+    file=$(find $DEV_ENVPATH -name "$ENVIRONMENT.sh")
+    if [ -z $file ]; then
+        echo "Environment shell file not found in path $DEV_ENVPATH/$ENVIRONMENT.sh"
+        return
+    fi
+    source $file
+    echo "Environemt $ENVIRONMENT Loaded"
+}
+
+function prune-node {
+    find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+}
+
+# Sign in to ECR 
+function ecr-login {
+    REGION=${AWS_REGION:-eu-central-1}  # Region to authenticate against
+    PROFILE=${AWS_PROFILE:-default}     # AWS profile to use
+    $(aws ecr get-login --no-include-email --region $REGION --profile $PROFILE)
+}
+
+# Get the aws-iam-authenticator token
+function aws-token {
+    TOKEN_ENV=${1:-$AWS_ENVIRONMENT}
+    if [ -z "$TOKEN_ENV" ]; then
+        echo "Argument (environment) or env var AWS_ENVIRONMENT must be set to run this command"
+    else
+        aws-iam-authenticator token -i $TOKEN_ENV | jq '.status.token' --raw-output
+    fi
+}
+
+# Authenticate with samlAuth using aws-google-auth
+function saml-auth {
+    IPD_ID=${GIP_ID} # Google SSO IDP identifier
+    SP_ID=${GSP_ID} # Google SSO SP identifier
+    DURATION=${AWS_DURATION:-28800} # Duration set for the aws role
+    REGION=${AWS_REGION:-eu-central-1} # Region to authenticate against
+    PROFILE=${AWS_PROFILE:-default} # AWS profile to use
+    SAML_USER=${1:-$GSAML_USER} # Saml user or first input to use for authentication
+
+    # [-a] Saves password in keychain
+    # [-k] Always ask for iam role
+    aws-google-auth -u $SAML_USER -I $IPD_ID -S $SP_ID -R $REGION -d $DURATION -p $PROFILE -a -k
+}
+
+# Set up kubernetes config
+function kube-conf {
+    REGION=${AWS_REGION:-eu-central-1} # Region to use for kubeconf
+    aws --region $REGION eks update-kubeconfig --name ${1:-$AWS_ENVIRONMENT}
+}
+
+function proxy-vault {
+    VAULT_POD=$(kubectl get pods --namespace default -l "app=vault" -o jsonpath="{.items[0].metadata.name}")
+    kubectl port-forward $VAULT_POD 8200
+}
+
+function serveo {
+    if [[ $# -lt 2 ]]; then
+        echo "Useage serveo <name> <port>"
+    else
+        ssh -R $1:80:localhost:$2 serveo.net
+    fi
+}
