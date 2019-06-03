@@ -14,3 +14,9 @@ alias cl='clear'
 alias network='ping 8.8.8.8'
 
 alias xcode='open -a /Applications/Xcode.app'
+
+
+alias airpods='bltc "Bjartes Airpods"'
+alias trackpad='bltc "Bjartes Trackpad"'
+alias keyboard='bltc "Bjartes Keyboard"'
+

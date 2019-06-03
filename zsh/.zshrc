@@ -6,9 +6,6 @@ prompt pure
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 for file in $(find ~/.dotfiles -name ".*"); do

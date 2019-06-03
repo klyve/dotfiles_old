@@ -39,6 +39,7 @@ brew cask install cyberduck
 # -------------------------------
 
 brew install kubectl
+brew install kubectx
 brew install jq
 brew install vault
 brew install consul
@@ -81,6 +82,7 @@ circleci config validate
 brew install ack
 brew install httpie
 brew install z
+brew install tmux
 
 pip3 install awscli
 pip3 install aws-google-auth

@@ -9,3 +9,4 @@ test -d "${GOPATH}/src/bitbucket.org" || mkdir -p "${GOPATH}/src/bitbucket.org"
 
 export DEV_ENVPATH=~/code/work
 export DEFAULT_DEV_ENV=maritimeoptima
+export GPG_TTY=$(tty)
