@@ -43,6 +43,7 @@ brew install kubectx
 brew install jq
 brew install vault
 brew install consul
+brew install cmake
 
 # Python
 brew install python3
