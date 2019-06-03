@@ -143,3 +143,16 @@ tell application "iTerm"
 end tell
 EOF
 }
+
+function coffee {
+    touch ~/.coffee
+    if [[ $# -lt 1 ]]; then
+        # Add cup of coffee
+        date +%s >> ~/.coffee
+    else
+        if [ "$1" = "count" ]; then
+            echo "$(< ~/.coffee wc -l) cups of coffee logged to date"
+        fi
+    fi
+}
+
