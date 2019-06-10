@@ -89,6 +89,7 @@ brew install ack
 brew install httpie
 brew install z
 brew install tmux
+brew install zsh-autosuggestions
 
 pip3 install awscli
 pip3 install aws-google-auth

@@ -2,3 +2,7 @@
 
 # z
 . /usr/local/etc/profile.d/z.sh
+
+# Zsh specific
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+

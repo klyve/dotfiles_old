@@ -11,4 +11,4 @@ export DEV_ENVPATH=~/code/work
 export DEFAULT_DEV_ENV=maritimeoptima
 export GPG_TTY=$(tty)
 
-export $SQUARESPACE_WEBSITE="sheep-rhino-ms3x"
+export SQUARESPACE_WEBSITE='sheep-rhino-ms3x'
