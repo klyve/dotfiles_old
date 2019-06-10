@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 alias ...='cd ../../'
-alias ....='cd ../../../' alias .....='cd ../../../../'
+alias ....='cd ../../../' 
+alias .....='cd ../../../../'
 alias ......='cd ../../../../../'
-alias ntnu='cd ~/NTNU'
 alias c=pbcopy
 
 alias phps='php -S localhost:3000'
@@ -19,4 +19,6 @@ alias xcode='open -a /Applications/Xcode.app'
 alias airpods='bltc "Bjartes Airpods"'
 alias trackpad='bltc "Bjartes Trackpad"'
 alias keyboard='bltc "Bjartes Keyboard"'
+
+alias cd='cs'
 

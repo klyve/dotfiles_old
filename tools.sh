@@ -10,6 +10,7 @@ brew cask install caprine
 brew cask install spotify
 brew cask install 1password
 brew cask install alfred
+brew cask install skype-for-business
 
 # Browsers
 brew cask install google-chrome
@@ -32,6 +33,8 @@ brew install neovim
 brew cask install visual-studio-code
 brew cask install geektool
 brew cask install cyberduck
+brew cask install java
+brew cask install virtualbox
 
 
 # -------------------------------
@@ -63,6 +66,7 @@ gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703
 
 # Golang
 brew install go
+brew install dep
 
 
 # Node
@@ -70,7 +74,8 @@ brew install node
 npm install -g react-native-cli
 npm install -g nodemon
 npm install -g n
-npm install --global pure-prompt
+npm install -g pure-prompt
+npm install -g expo-cli
 
 # -------------------------------
 # ------- Terminal tools --------

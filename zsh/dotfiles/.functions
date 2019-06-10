@@ -156,3 +156,11 @@ function coffee {
     fi
 }
 
+function squarespace {
+    squarespace-server https://${SQUARESPACE_WEBSITE}.squarespace.com --auth --verbose
+}
+
+function cs {
+    cd "$@" && ls -a
+}
+
