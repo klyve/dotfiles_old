@@ -20,5 +20,5 @@ alias airpods='bltc "Bjartes Airpods"'
 alias trackpad='bltc "Bjartes Trackpad"'
 alias keyboard='bltc "Bjartes Keyboard"'
 
-alias cd='cs'
+#alias cd='cs'
 

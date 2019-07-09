@@ -7,8 +7,13 @@ test -d "${GOPATH}" || mkdir "${GOPATH}"
 test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 test -d "${GOPATH}/src/bitbucket.org" || mkdir -p "${GOPATH}/src/bitbucket.org"
 
+export PATH="$PATH:~/bin"
 export DEV_ENVPATH=~/code/work
 export DEFAULT_DEV_ENV=maritimeoptima
 export GPG_TTY=$(tty)
 
 export SQUARESPACE_WEBSITE='sheep-rhino-ms3x'
+export PURE_PROMPT_SYMBOL='λ'
+export PURE_GIT_DOWN_ARROW='⍱'
+export PURE_GIT_UP_ARROW='৳'
+export PURE_GIT_UNTRACKED_DIRTY='⛈'

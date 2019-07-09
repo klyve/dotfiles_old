@@ -160,8 +160,8 @@ function squarespace {
     squarespace-server https://${SQUARESPACE_WEBSITE}.squarespace.com --auth --verbose
 }
 
-function cs {
-    cd "$@" && ls -a
+function cd {
+    builtin cd "$@" && ls -a
 }
 
 function create-service {
@@ -171,3 +171,16 @@ function create-service {
 function git-clone {
     git clone git@github.com:MaritimeOptima/$1.git
 }
+
+function create-note {
+    DATE=$(date "+%Y-%m-%d")
+    touch "$1-$DATE.md"
+}
+
+function argo-add {
+    REMOTE=$(git config --get remote.origin.url)
+    argocd repo add $REMOTE --ssh-private-key-path ~/.ssh/id_rsa --insecure-ignore-host-key 
+}
+
+
+

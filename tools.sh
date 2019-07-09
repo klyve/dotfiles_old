@@ -47,6 +47,8 @@ brew install jq
 brew install vault
 brew install consul
 brew install cmake
+brew install cfssl
+brew install protobuf
 
 # Python
 brew install python3
