@@ -17,3 +17,4 @@ export PURE_PROMPT_SYMBOL='λ'
 export PURE_GIT_DOWN_ARROW='⍱'
 export PURE_GIT_UP_ARROW='৳'
 export PURE_GIT_UNTRACKED_DIRTY='⛈'
+export VAULT_ADDR=http://127.0.0.1:8200

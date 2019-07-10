@@ -82,8 +82,8 @@ function kube-conf {
 }
 
 function proxy-vault {
-    VAULT_POD=$(kubectl get pods --namespace default -l "app=vault" -o jsonpath="{.items[0].metadata.name}")
-    kubectl port-forward $VAULT_POD 8200
+    VAULT_POD=$(kubectl get pods -n infrastructure -l "app=vault" -o jsonpath="{.items[0].metadata.name}")
+    kubectl port-forward -n infrastructure $VAULT_POD 8200
 }
 
 function serveo {

@@ -49,6 +49,7 @@ brew install consul
 brew install cmake
 brew install cfssl
 brew install protobuf
+brew install argoproj/tap/argo
 
 # Python
 brew install python3
