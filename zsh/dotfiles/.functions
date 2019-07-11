@@ -190,4 +190,11 @@ function argocd-login {
 }
 
 
+function vault-login {
+    # Requires a personal github token to be set
+    # https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
+    vault login -method=github token=$GITHUB_TOKEN
+}
+
+
 
