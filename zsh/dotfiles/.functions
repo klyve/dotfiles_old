@@ -85,6 +85,15 @@ function proxy-vault {
     VAULT_POD=$(kubectl get pods -n infrastructure -l "app=vault" -o jsonpath="{.items[0].metadata.name}")
     kubectl port-forward -n infrastructure $VAULT_POD 8200
 }
+function proxy-argo {
+    kubectl port-forward svc/argocd-server -n argocd 8080:443
+}
+function proxy-argo {
+    kubectl port-forward svc/consul -n infrastructure 8500
+}
+function proxy-kafka {
+    kubectl port-forward svc/kafka -n infrastructure 9092
+}
 
 function serveo {
     if [[ $# -lt 2 ]]; then
@@ -177,14 +186,13 @@ function create-note {
     touch "$1-$DATE.md"
 }
 
+
 function argocd-add {
     REMOTE=$(git config --get remote.origin.url)
     argocd repo add $REMOTE --ssh-private-key-path ~/.ssh/id_argocd_rsa --insecure-ignore-host-key 
 }
 
-function proxy-argo {
-    kubectl port-forward svc/argocd-server -n argocd 8080:443
-}
+
 function argocd-login {
     argocd login localhost:8080 --sso
 }
