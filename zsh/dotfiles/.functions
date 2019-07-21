@@ -206,3 +206,27 @@ function vault-login {
 
 
 
+function kafka-list-topics {
+    kubectl -n infrastructure exec ${KAFKA_TEST_POD} -- \
+    /usr/bin/kafka-topics --zookeeper ${ZOOKEEPER_ADDR} --list
+}
+
+function kafka-create-topic {
+    kubectl -n infrastructure exec ${KAFKA_TEST_POD} -- \
+    /usr/bin/kafka-topics --zookeeper ${ZOOKEEPER_ADDR} \
+    --topic ${1} --create --partitions 1 --replication-factor 1
+}
+
+function kafka-delete-topic {
+    kubectl -n infrastructure exec ${KAFKA_TEST_POD} -- \
+    /usr/bin/kafka-topics --zookeeper ${ZOOKEEPER_ADDR} --delete \
+    --topic ${1} 
+}
+
+function kafka-listen-topic {
+    kubectl -n infrastructure exec -ti ${KAFKA_TEST_POD} -- \
+    /usr/bin/kafka-console-consumer --bootstrap-server ${KAFKA_ADDR} \
+    --topic $1 --from-beginning
+}
+
+

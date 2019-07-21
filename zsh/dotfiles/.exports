@@ -18,3 +18,8 @@ export PURE_GIT_DOWN_ARROW='⍱'
 export PURE_GIT_UP_ARROW='৳'
 export PURE_GIT_UNTRACKED_DIRTY='⛈'
 export VAULT_ADDR=http://127.0.0.1:8200
+
+# Kafka 
+export KAFKA_TEST_POD="kafka-test-client"
+export ZOOKEEPER_ADDR="kafka-zookeeper:2181"
+export KAFKA_ADDR="kafka:9092"
