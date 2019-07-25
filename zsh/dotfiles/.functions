@@ -88,7 +88,7 @@ function proxy-vault {
 function proxy-argo {
     kubectl port-forward svc/argocd-server -n argocd 8080:443
 }
-function proxy-argo {
+function proxy-consul {
     kubectl port-forward svc/consul -n infrastructure 8500
 }
 function proxy-kafka {
