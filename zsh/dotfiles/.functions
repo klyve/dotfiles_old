@@ -229,4 +229,17 @@ function kafka-listen-topic {
     --topic $1 --from-beginning
 }
 
+function ecr-repo {
+    if [ -z $1 ]; then
+        echo "Requires repository name"
+        return
+    fi
+    name="${ECR_NAMESPACE}${1}"
+    repo=$(aws ecr describe-repositories|grep "repository/${name}\",")
+    if [ -z "$repo" ]; then
+        aws ecr create-repository --repository-name $name
+    else
+        echo "Repo already exists"
+    fi
+}
 

@@ -23,3 +23,6 @@ export VAULT_ADDR=http://127.0.0.1:8200
 export KAFKA_TEST_POD="kafka-test-client"
 export ZOOKEEPER_ADDR="kafka-zookeeper:2181"
 export KAFKA_ADDR="kafka:9092"
+
+# ECR namespace
+export ECR_NAMESPACE="maritime-optima/microservices/"

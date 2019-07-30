@@ -48,6 +48,7 @@ Plug 'honza/vim-snippets'
 Plug 'metakirby5/codi.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'mileszs/ack.vim'
+Plug 'jparise/vim-graphql'
 "Plug 'W0rp/ale'
 """ Plug 'tweekmonster/gofmt.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
