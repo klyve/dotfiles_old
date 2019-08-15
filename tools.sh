@@ -16,6 +16,7 @@ brew cask install skype-for-business
 brew cask install google-chrome
 brew cask install google-chrome-canary
 brew cask install firefox
+brew cask install firefox-nightly
 
 # Terminal 
 brew cask install iterm2
@@ -23,7 +24,6 @@ brew cask install iterm2
 # Design tools
 brew cask install figma
 brew cask install zeplin
-brew cask install homebrew/cask-versions/google-chrome-canary
 
 # Development
 brew cask install docker
@@ -93,11 +93,7 @@ brew install httpie
 brew install z
 brew install tmux
 brew install zsh-autosuggestions
-brew install watch
-
-pip3 install awscli
-pip3 install aws-google-auth
-
+brew install watch pip3 install awscli pip3 install aws-google-auth 
 if [ ! -x "$(command -v aws-iam-authenticator)" ]; then
     echo "Installing AWS IAM authenticator for macos"
     curl -o aws-iam-authenticator https://amazon-eks.s3-us-west-2.amazonaws.com/1.12.7/2019-03-27/bin/darwin/amd64/aws-iam-authenticator
