@@ -50,6 +50,7 @@ brew install cmake
 brew install cfssl
 brew install protobuf
 brew install argoproj/tap/argo
+brew install hub
 
 # Python
 brew install python3
