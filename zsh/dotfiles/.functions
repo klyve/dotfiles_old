@@ -243,3 +243,11 @@ function ecr-repo {
     fi
 }
 
+function video-gif {
+ulimit -Sv 1000000
+filename=$(basename -- "$1")
+ffmpeg \
+  -i $1 \
+  -r 10 \
+  $filename.gif
+}

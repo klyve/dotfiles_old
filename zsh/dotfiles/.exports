@@ -26,3 +26,13 @@ export KAFKA_ADDR="kafka:9092"
 
 # ECR namespace
 export ECR_NAMESPACE="maritime-optima/microservices/"
+
+export ANDROID_SDK=$HOME/Library/Android/sdk
+export PATH="$PATH:$ANDROID_SDK/emulator"
+export PATH="$PATH:$ANDROID_SDK/tools"
+export PATH="$PATH:$ANDROID_SDK/platform-tools"
+
+#export ANDROID_PATHS="$ANDROID_SDK/emulator:$ANDROID_SDK/tools";
+#export PATH="$PATH:$ANDROID_PATHS"
+export LD_LIBRARY_PATH=$ANDROID_SDK/tools/lib:$LD_LIBRARY_PATH
+
