@@ -10,7 +10,6 @@ brew cask install caprine
 brew cask install spotify
 brew cask install 1password
 brew cask install alfred
-brew cask install skype-for-business
 
 # Browsers
 brew cask install google-chrome
@@ -26,15 +25,16 @@ brew cask install figma
 brew cask install zeplin
 
 # Development
+brew install neovim
 brew cask install docker
 brew cask install minikube
 brew cask install tableplus
-brew install neovim
 brew cask install visual-studio-code
 brew cask install geektool
 brew cask install cyberduck
 brew cask install java
 brew cask install virtualbox
+brew install azure-cli
 
 
 # -------------------------------
@@ -51,6 +51,7 @@ brew install cfssl
 brew install protobuf
 brew install argoproj/tap/argo
 brew install hub
+brew install azure-cli
 
 # Python
 brew install python3

@@ -19,6 +19,7 @@ alias xcode='open -a /Applications/Xcode.app'
 alias airpods='bltc "Bjartes Airpods"'
 alias trackpad='bltc "Bjartes Trackpad"'
 alias keyboard='bltc "Bjartes Keyboard"'
+alias lf='ls -lad */'
 
-#alias cd='cs'
-
+alias k=kubectl
+alias V="nvim"

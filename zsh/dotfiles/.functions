@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function reload {
+function reload { 
     source ~/.zshrc
 }
 
@@ -13,7 +13,7 @@ function pg-restart {
 }
 
 function mongo-start {
-    mongod --config /usr/local/etc/mongod.conf
+    mongod --config /usr/local/etc/mongod.conf --fork
 }
 
 function redis-start {
@@ -76,9 +76,16 @@ function saml-auth {
 }
 
 # Set up kubernetes config
-function kube-conf {
+function eks-kube-conf {
     REGION=${AWS_REGION:-eu-central-1} # Region to use for kubeconf
     aws --region $REGION eks update-kubeconfig --name ${1:-$AWS_ENVIRONMENT}
+}
+
+# AKS Kube config
+function aks-kube-conf {
+    RESOURCE=${1:-$AZ_RESOURCE} 
+    RESOURCE=${RESOURCE:-mo-develop}
+    az aks get-credentials --name ${RESOURCE}-aks --resource-group ${RESOURCE}-resources
 }
 
 function proxy-vault {
@@ -99,7 +106,7 @@ function serveo {
     if [[ $# -lt 2 ]]; then
         echo "Useage serveo <name> <port>"
     else
-        ssh -R $1:80:localhost:$2 serveo.net
+        ssh -o ServerAliveInterval=60 -R $1:80:localhost:$2 serveo.net
     fi
 }
 
@@ -189,7 +196,7 @@ function create-note {
 
 function argocd-add {
     REMOTE=$(git config --get remote.origin.url)
-    argocd repo add $REMOTE --ssh-private-key-path ~/.ssh/id_argocd_rsa --insecure-ignore-host-key 
+    argocd repo add $REMOTE --ssh-private-key-path ~/.ssh/id_argocd_rsa --insecure-ignore-host-key --upsert 
 }
 
 
@@ -197,18 +204,14 @@ function argocd-login {
     argocd login localhost:8080 --sso
 }
 
-
-function vault-login {
-    # Requires a personal github token to be set
-    # https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
-    vault login -method=github token=$GITHUB_TOKEN
-}
-
-
-
 function kafka-list-topics {
     kubectl -n infrastructure exec ${KAFKA_TEST_POD} -- \
     /usr/bin/kafka-topics --zookeeper ${ZOOKEEPER_ADDR} --list
+}
+
+function kafka-describe-topic {
+    kubectl -n infrastructure exec ${KAFKA_TEST_POD} -- \
+    /usr/bin/kafka-topics --describe --zookeeper ${ZOOKEEPER_ADDR} --topic $1
 }
 
 function kafka-create-topic {
@@ -251,3 +254,122 @@ ffmpeg \
   -r 10 \
   $filename.gif
 }
+
+
+function vault-login {
+    token=$(curl --request POST --data '{"token": "'${GITHUB_TOKEN}'"}' ${VAULT_ADDR}/v1/auth/github/login| jq -r '.auth.client_token')
+    export VAULT_TOKEN=$token
+}
+
+function render-consul-template {
+    vault-login
+    echo "Starting consul template"
+    consul-template -once -config $1 $2
+}
+
+
+function vault-db {
+    if [ -z $VAULT_TOKEN ]; then
+        echo "No vault token set"
+        return
+    fi
+    eval "$(curl --header "X-Vault-Token: $VAULT_TOKEN" -s -k  ${VAULT_ADDR}/v1/database/creds/$1| jq -r '.data | to_entries | .[] | .key + "=\"" + .value + "\""')"
+   
+    export VAULT_DB_USERNAME=$username
+    export VAULT_DB_PASSWORD=$password
+    echo "*************************************"
+    echo "Set Vault DB environment variables"
+    echo
+    echo "VAULT_DB_USERNAME"
+    echo "VAULT_DB_PASSWORD"
+    echo
+    echo "*************************************"
+}
+
+function vault-aws {
+    if [ -z $VAULT_TOKEN ]; then
+        echo "No vault token set"
+        return
+    fi
+    eval "$(curl --header "X-Vault-Token: $VAULT_TOKEN" -s -k  ${VAULT_ADDR}/v1/aws/creds/$1| jq -r '.data | to_entries | .[] | .key + "=\"" + .value + "\""')"
+   
+    export VAULT_AWS_SECRET_KEY=$secret_key
+    export VAULT_AWS_ACCESS_KEY=$access_key
+    echo "*************************************"
+    echo "Set Vault AWS environment variables"
+    echo
+    echo "VAULT_AWS_SECRET_KEY"
+    echo "VAULT_AWS_ACCESS_KEY"
+    echo
+    echo "*************************************"
+}
+
+function set-aws-environment-vars {
+    mkdir -p ~/.maritimeoptima
+    echo "$(aws ssm get-parameters --name $AWS_ENVIRONMENT --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" |jq '.[0].Value' --raw-output)" > ~/.maritimeoptima/environment.sh
+    source ~/.maritimeoptima/environment.sh
+    rm ~/.maritimeoptima/environment.sh
+}
+
+
+  
+# Updates editor information when the keymap changes.
+function zle-keymap-select() {
+  # update keymap variable for the prompt
+  VI_KEYMAP=$KEYMAP
+
+  zle reset-prompt
+  zle -R
+}
+
+zle -N zle-keymap-select
+
+function vi-accept-line() {
+  VI_KEYMAP=main
+  zle accept-line
+}
+
+zle -N vi-accept-line
+
+
+bindkey -v
+
+# use custom accept-line widget to update $VI_KEYMAP
+bindkey -M vicmd '^J' vi-accept-line
+bindkey -M vicmd '^M' vi-accept-line
+
+# allow v to edit the command line (standard behaviour)
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'v' edit-command-line
+
+# allow ctrl-p, ctrl-n for navigate history (standard behaviour)
+bindkey '^P' up-history
+bindkey '^N' down-history
+
+# allow ctrl-h, ctrl-w, ctrl-? for char and word deletion (standard behaviour)
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+
+# allow ctrl-r and ctrl-s to search the history
+bindkey '^r' history-incremental-search-backward
+bindkey '^s' history-incremental-search-forward
+
+# allow ctrl-a and ctrl-e to move to beginning/end of line
+bindkey '^a' beginning-of-line
+bindkey '^e' end-of-line
+
+# if mode indicator wasn't setup by theme, define default
+if [[ "$MODE_INDICATOR" == "" ]]; then
+  MODE_INDICATOR="%{$fg_bold[red]%}<%{$fg[red]%}<<%{$reset_color%}"
+fi
+
+function vi_mode_prompt_info() {
+  echo "${${VI_KEYMAP/vicmd/$MODE_INDICATOR}/(main|viins)/}"
+}
+
+# define right prompt, if it wasn't defined by a theme
+if [[ "$RPS1" == "" && "$RPROMPT" == "" ]]; then
+  RPS1='$(vi_mode_prompt_info)'
+fi
