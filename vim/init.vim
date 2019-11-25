@@ -15,9 +15,10 @@ Plug 'nightsense/forgotten'
 Plug 'zaki/zazen'
 Plug 'rakr/vim-one'
 Plug 'trevordmiller/nova-vim'
+Plug 'lifepillar/vim-solarized8'
 
 " Aethetics - Additional
-Plug 'nightsense/nemo'
+Plug 'nightsense/nemo' 
 Plug 'yuttie/hydrangea-vim'
 Plug 'chriskempson/tomorrow-theme', { 'rtp': 'vim' }
 Plug 'rhysd/vim-color-spring-night'
@@ -49,14 +50,25 @@ Plug 'metakirby5/codi.vim'
 Plug 'kien/ctrlp.vim'
 Plug 'mileszs/ack.vim'
 Plug 'jparise/vim-graphql'
-"Plug 'W0rp/ale'
+Plug 'W0rp/ale'
+Plug 'easymotion/vim-easymotion'
 """ Plug 'tweekmonster/gofmt.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'kaicataldo/material.vim'
-Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+
+""" Javascript / JSX
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
+
+""" Helm
+Plug 'towolf/vim-helm'
+
+Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
+let g:prettier#autoformat = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
+
 
 """ golang
 function! BuildYMC(info)
@@ -65,16 +77,32 @@ function! BuildYMC(info)
     endif
 endfunction
 
-Plug 'scrooloose/syntastic'
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYMC') }
 
 call plug#end()
 
 
+""" reloads vimrc after saving but keep cursor position
+if !exists('*ReloadVimrc')
+   function! ReloadVimrc()
+       let save_cursor = getcurpos()
+       source $MYVIMRC
+       call setpos(‘.’, save_cursor)
+   endfun
+endif
+
+autocmd! BufWritePost $MYVIMRC call ReloadVimrc()
+
+
+fun! RunMacroOverSelection(macroname)
+    execute "'<,'>normal @". a:macroname
+endfun
+com -nargs=1 Rover :call RunMacroOverSelection(<f-args>)
+nnoremap <leader>r :Rover<space>
 
 
 """ Python3 VirtualEnv
-let g:python3_host_prog = expand('~/.config/nvim/env/bin/python')
+let g:python3_host_prog = expand('/usr/local/bin/python3')
 
 """ Coloring
 syntax on
@@ -97,6 +125,8 @@ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent
 set incsearch ignorecase smartcase hlsearch
 set ruler laststatus=2 showcmd showmode
 set list listchars=trail:»,tab:»-
+"set list
+
 set fillchars+=vert:\ 
 set wrap breakindent
 set encoding=utf-8
@@ -224,6 +254,19 @@ function! ColorZazen()
     IndentLinesEnable
 endfunction
 
+function! ColorNova()
+    set background=dark
+    colorscheme nova
+    IndentLinesEnable
+endfunction
+
+function! ColorSolarized()
+    set background=light
+    colorscheme solarized8
+    IndentLinesDisable
+endfunction
+
+
 """ Custom Mappings
 
 let mapleader=","
@@ -232,34 +275,49 @@ nmap \ <leader>q
 nmap <leader>w :TagbarToggle<CR>
 nmap <leader>ee :Colors<CR>
 nmap <leader>ea :AirlineTheme
-nmap <leader>e1 :call ColorDracula()<CR>
+nmap <leader>e1 :call ColorNova()<CR>
 nmap <leader>e2 :call ColorSeoul256()<CR>
-nmap <leader>e3 :call ColorForgotten()<CR>
+nmap <leader>e3 :call ColorSolarized()<CR>
 nmap <leader>e4 :call ColorZazen()<CR>
-nmap <leader>r :so ~/.config/nvim/init.vim<CR>
 nmap <leader>t :call TrimWhitespace()<CR>
 xmap <leader>a gaip*
-nmap <leader>a gaip*
-nmap <leader>s <C-w>s<C-w>j:terminal<CR>
+nmap <leader>a gaip* 
+"nmap <leader>s <C-w>s<C-w>j:terminal<CR> 
 nmap <leader>vs <C-w>v<C-w>l:terminal<CR>
 """nmap <leader>d <Plug>(pydocstring)
-nmap <leader>f :Files<CR>
+nmap <leader>d :Files<CR>
 nmap <leader>g :Goyo<CR>
 nmap <leader>h :RainbowParentheses!!<CR>
 "nmap <leader>j :set filetype=journal<CR>
 nmap <leader>k :ColorToggle<CR>
 nmap <leader>l :Limelight!!<CR>
 xmap <leader>l :Limelight!!<CR>
-nmap <leader>d :!./deploy.sh<CR>
 autocmd FileType python nmap <leader>x :0,$!~/.config/nvim/env/bin/python -m yapf<CR>
-nmap <silent> <leader><leader> :noh<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
+"nmap <leader><leader> :noh<CR>
+nmap <silent><Esc><Esc> :noh<CR>
 
 noremap <Leader>y "*y
 noremap <Leader>p "*p
 noremap <Leader>Y "+y
 noremap <Leader>P "+p
+noremap <Leader>e :Errors<CR>
+
+
+map  <Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader>f <Plug>(easymotion-overwin-f)
+
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+
+" Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" Move to word
+map  <Leader>W <Plug>(easymotion-bd-w)
+nmap <Leader>W <Plug>(easymotion-overwin-w)
 
 """ Golang VIM
 
@@ -273,24 +331,30 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
-let g:syntastic_go_checkers = ['go', 'golint', 'errcheck']
 
-"let b:ale_linters = ['go', 'golint', 'gofmt', 'errcheck']
-"let g:ale_sign_error = '>>'
-"let g:ale_sign_warning = '--'
+let g:ale_linters = {'go': ['golangci-lint']}
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_go_golangci_lint_package=1
+let g:ale_go_golangci_lint_options = '--enable-all
+\ --disable lll'
+
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+let g:ale_open_list = 1
+let g:ale_keep_list_window_open = 1
 
 
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
+let g:ycm_min_num_of_chars_for_completion = 100
 
-"set background=dark
-colorscheme nova
-"let g:material_theme_style = 'dark'
+set background=dark
+colorscheme dracula
 
-"let g:airline_theme='one'
-
-"colorscheme one
-"set background=light  for the dark version
- "set background=light " for the light version
+" Disable the list chars
+set nolist
 
 
