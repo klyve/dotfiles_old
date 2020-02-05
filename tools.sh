@@ -6,8 +6,7 @@
 # -------------------------------
 # Must have applications
 brew cask install slack
-brew cask install caprine
-brew cask install spotify
+brew cask install caprine brew cask install spotify
 brew cask install 1password
 brew cask install alfred
 
@@ -52,6 +51,10 @@ brew install protobuf
 brew install argoproj/tap/argo
 brew install hub
 brew install azure-cli
+
+brew cask install osxfuse
+brew install datawire/blackbird/telepresence
+
 
 # Python
 brew install python3
