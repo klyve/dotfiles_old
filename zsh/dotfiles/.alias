@@ -22,4 +22,5 @@ alias keyboard='bltc "Bjartes Keyboard"'
 alias lf='ls -lad */'
 
 alias k=kubectl
-alias V="nvim"
+alias v="nvim"
+alias e="nvim"

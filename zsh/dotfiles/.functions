@@ -20,6 +20,17 @@ function redis-start {
     redis-server /usr/local/etc/redis.conf
 }
 
+function kproxy {
+    # Available methods 
+    # inject-tcp
+    # vpn-tcp
+    method=${METHOD:-"vpn-tcp"}
+    telepresence --deployment $MO_USER --method $method $@ --run $SHELL 
+}
+
+function kforward {
+    kproxy --expose $1
+}
 
 function dev {
     if [ -z $1 ]; then

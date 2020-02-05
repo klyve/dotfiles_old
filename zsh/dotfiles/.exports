@@ -17,7 +17,8 @@ export PURE_PROMPT_SYMBOL='λ'
 export PURE_GIT_DOWN_ARROW='⍱'
 export PURE_GIT_UP_ARROW='৳'
 export PURE_GIT_UNTRACKED_DIRTY='⛈'
-export VAULT_ADDR=http://127.0.0.1:8200
+#export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_ADDR=http://vault.infrastructure:8200
 
 # Kafka 
 export KAFKA_TEST_POD="kafka-test-client"
@@ -35,4 +36,4 @@ export PATH="$PATH:$ANDROID_SDK/platform-tools"
 export LD_LIBRARY_PATH=$ANDROID_SDK/tools/lib:$LD_LIBRARY_PATH
 export AWS_ENVIRONMENT="development"
 export EDITOR=nvim
-
+export MO_USER=bjarte

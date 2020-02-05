@@ -47,7 +47,7 @@ Plug 'vim-scripts/loremipsum'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'metakirby5/codi.vim'
-Plug 'kien/ctrlp.vim'
+"Plug 'kien/ctrlp.vim'
 Plug 'mileszs/ack.vim'
 Plug 'jparise/vim-graphql'
 Plug 'W0rp/ale'
@@ -61,6 +61,10 @@ Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'maxmellon/vim-jsx-pretty'
+
+""" UI
+Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
+
 
 """ Helm
 Plug 'towolf/vim-helm'
@@ -82,23 +86,23 @@ Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYMC') }
 call plug#end()
 
 
-""" reloads vimrc after saving but keep cursor position
-if !exists('*ReloadVimrc')
-   function! ReloadVimrc()
-       let save_cursor = getcurpos()
-       source $MYVIMRC
-       call setpos(‘.’, save_cursor)
-   endfun
+if !exists("*ReloadVimrc")
+    function! ReloadVimrc()
+        let save_cursor = getcurpos()
+        source $MYVIMRC
+        call setpos('.', save_cursor)
+    endfunction
+    com! ReloadVimrc :call ReloadVimrc()
 endif
-
 autocmd! BufWritePost $MYVIMRC call ReloadVimrc()
-
 
 fun! RunMacroOverSelection(macroname)
     execute "'<,'>normal @". a:macroname
 endfun
-com -nargs=1 Rover :call RunMacroOverSelection(<f-args>)
-nnoremap <leader>r :Rover<space>
+
+com! -nargs=1 Rover :call RunMacroOverSelection(<f-args>)
+nmap <leader>r :Rover<space>
+map <leader>r :Rover<space>
 
 
 """ Python3 VirtualEnv
@@ -143,10 +147,12 @@ let g:NERDTreeDirArrowExpandable = '↠'
 let g:NERDTreeDirArrowCollapsible = '↡'
 
 " Airline
-let g:airline_powerline_fonts = 1
+"let g:airline_powerline_fonts = 1
 let g:airline_section_z = ' %{strftime("%-I:%M %p")}'
-let g:airline_section_warning = ''
+"let g:airline_section_warning = ''
 "let g:airline#extensions#tabline#enabled = 1
+set t_Co=256
+
 
 " Neovim :Terminal
 tmap <Esc> <C-\><C-n>
@@ -304,6 +310,9 @@ noremap <Leader>Y "+y
 noremap <Leader>P "+p
 noremap <Leader>e :Errors<CR>
 
+nmap <Leader>b :make run<CR>
+map <Leader>b :make run<CR>
+
 
 map  <Leader>f <Plug>(easymotion-bd-f)
 nmap <Leader>f <Plug>(easymotion-overwin-f)
@@ -318,6 +327,11 @@ nmap <Leader>L <Plug>(easymotion-overwin-line)
 " Move to word
 map  <Leader>W <Plug>(easymotion-bd-w)
 nmap <Leader>W <Plug>(easymotion-overwin-w)
+
+" Clap
+nmap <C-p> :Clap<CR>
+map <C-p> :Clap<CR>
+
 
 """ Golang VIM
 
@@ -347,14 +361,12 @@ let g:ale_open_list = 1
 let g:ale_keep_list_window_open = 1
 
 
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+"let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlP'
 let g:ycm_min_num_of_chars_for_completion = 100
 
-set background=dark
-colorscheme dracula
+set background=light
+colorscheme nemo-light
 
 " Disable the list chars
 set nolist
-
-
