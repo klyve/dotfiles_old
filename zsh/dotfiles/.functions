@@ -188,7 +188,10 @@ function squarespace {
 }
 
 function cd {
-    builtin cd "$@" && ls -a
+    builtin cd "$@" && exa -abghHliS
+}
+function ls {
+  exa "$@" -abghHlS
 }
 
 function create-service {
@@ -319,29 +322,16 @@ function set-aws-environment-vars {
     mkdir -p ~/.maritimeoptima
     echo "$(aws ssm get-parameters --name $AWS_ENVIRONMENT --with-decryption --query "Parameters[*].{Name:Name,Value:Value}" |jq '.[0].Value' --raw-output)" > ~/.maritimeoptima/environment.sh
     source ~/.maritimeoptima/environment.sh
-    rm ~/.maritimeoptima/environment.sh
-}
-
-
-function az-secret {
-    line=$1
-    vault=$2
-    VALUE=$(az keyvault secret show --id ${line} --vault-name "${vault}-kv"|jq '.value' --raw-output)
-    NAME=$(echo ${line##*/}|tr '-' '_' | tr '[:lower:]' '[:upper:]')
-    echo "export MO_${NAME}=\"${VALUE}\"" >> ~/.maritimeoptima/environment.sh
+    # rm ~/.maritimeoptima/environment.sh
 }
 
 function az-secrets {
-    mkdir -p ~/.maritimeoptima
-    SECRETS=$(az keyvault secret list --vault-name "${1}-kv"|jq '.[].id' --raw-output)
-    echo "Setting for environment $1"
-    echo $SECRETS | while read line; do
-        $(az-secret $line "${1}" > /dev/null 2>&1 & )
-    done
-    echo "export MO_ENVIRONMENT=\"${1}\"" >> ~/.maritimeoptima/environment.sh
-    wait
-    source ~/.maritimeoptima/environment.sh
-    rm ~/.maritimeoptima/environment.sh
+  eval $(keyvault-env -environment $1)
+  kubectx mo-$1-aks
+}
+
+function git-video {
+    gource -c 4.0 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 gource.mp4
 }
 
 
@@ -406,3 +396,23 @@ function vi_mode_prompt_info() {
 if [[ "$RPS1" == "" && "$RPROMPT" == "" ]]; then
   RPS1='$(vi_mode_prompt_info)'
 fi
+
+function jql() {
+  curl "https://${JIRA_TEAM}.atlassian.net/rest/api/2/search?jql=$1&maxResults=100&startAt=$(($2 * 100))" \
+    -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
+    |  jq -r '.issues[] | "\(.key): \(.fields.summary)"'
+}
+
+# type = Subtask and parent = "MR-466" and status != Done
+# Child issues
+function fjql() {
+  ticket=$({for ((req=0;req<5;req++)); do
+    jql $1 $req &
+  done} | fzf --no-hscroll +m | cut -d ':' -f 1)
+  [ ${#ticket} -eq 0 ] return
+
+  open "https://${JIRA_TEAM}.atlassian.net/browse/${ticket}"
+}
+
+alias fj="fjql 'order%20by%20updated%20DESC'"
+alias fjm="fjql 'project%20%3D%20%22${JIRA_PROJECT}%22%20AND%20assignee%20%3D%20currentUser%28%29%20AND%20sprint%20in%20openSprints%28%29%20AND%20resolution%20%3D%20Unresolved%20order%20by%20updated%20DESC'"

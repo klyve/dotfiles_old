@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sudo -v
+
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 # -------------------------------
 # -------- Applications ---------
@@ -34,6 +36,7 @@ brew cask install cyberduck
 brew cask install java
 brew cask install virtualbox
 brew install azure-cli
+brew install tmuxinator
 
 
 # -------------------------------
@@ -112,4 +115,6 @@ if [ ! -x "$(command -v aws-iam-authenticator)" ]; then
 fi
 
 
+sudo mkdir -p /usr/local/share/man/man1
+gzip -c extra/alacritty.man | sudo tee /usr/local/share/man/man1/alacritty.1.gz > /dev/null
 
